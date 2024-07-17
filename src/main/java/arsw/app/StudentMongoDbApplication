@@ -1,0 +1,54 @@
+package arsw.app;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import java.time.LocalDate;
+
+import arsw.app.Student;
+import arsw.app.StudentRepository;
+
+
+
+@SpringBootApplication
+public class StudentMongoDbApplication implements CommandLineRunner {
+
+  @Autowired
+  private StudentRepository repository;
+
+  public static void main(String[] args) {
+    SpringApplication.run(AccessingDataMongodbApplication.class, args);
+  }
+
+  @Override
+  public void run(String... args) throws Exception {
+
+    repository.deleteAll();
+
+    // Creating data for the database
+    repository.save(new Student("david@gmail.com", "David", LocalDate.now(), "Computer Science"));
+    repository.save(new Student("juan@hotmail.com", "Juan", LocalDate.now(), "Civil Engineering"));
+    repository.save(new Student("juan@hotmail.com", "Manuel", LocalDate.now(), "Computer Science"));
+    repository.save(new Student("juan@hotmail.com", "Jose", LocalDate.now(), "Civil Engineering"));
+
+    // Showing all the customers  with findAll
+    System.out.println("All Customers in the database: ");
+    System.out.println("-------------------------------");
+    for (Student customer : repository.findAll()) {
+      System.out.println(customer);
+    }
+    System.out.println();
+
+    // Showing a person with the name 
+    System.out.println("Customer with the name ('Juan'):");
+    System.out.println("--------------------------------");
+    System.out.println(repository.findByName("Juan"));
+
+    for (Student customer : repository.findByDepartment("Computer Science")) {
+      System.out.println(customer);
+    }
+
+  }
+
+}
